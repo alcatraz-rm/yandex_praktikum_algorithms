@@ -1,6 +1,4 @@
-def are_close(x, y):
-    return (x[0] - y[0]) ** 2 + (x[1] - y[1]) ** 2 <= 400
-
+import itertools
 
 metro_stops = []
 bus_stops = {}
@@ -28,19 +26,10 @@ for k in range(n):
     x, y = metro_stops[k]
     i, j = x // 20, y // 20
 
-    for s in (
-             bus_stops.get((i - 1, j - 1), []) +
-             bus_stops.get((i - 1, j), []) +
-             bus_stops.get((i - 1, j + 1), []) +
-             bus_stops.get((i, j - 1), []) +
-             bus_stops.get((i, j), []) +
-             bus_stops.get((i, j + 1), []) +
-             bus_stops.get((i + 1, j - 1), []) +
-             bus_stops.get((i + 1, j), []) +
-             bus_stops.get((i + 1, j + 1), [])
-    ):
-        if (s[0] - x) ** 2 + (s[1] - y) ** 2 <= 400:
-            counter += 1
+    for square in itertools.chain(bus_stops.get((i + di, j + dj), []) for di in (-1, 0, 1) for dj in (-1, 0, 1)):
+        for s in square:
+            if (s[0] - x) ** 2 + (s[1] - y) ** 2 <= 400:
+                counter += 1
 
     if counter > max_:
         max_ = counter
